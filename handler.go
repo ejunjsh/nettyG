@@ -1,7 +1,9 @@
 package gonet
 
 type Handler interface {
-	input(interface{}) interface{}
-	output(interface{}) interface{}
+	onConnected(c *Context) error
+	onError(c *Context)
+	onClosed(c *Context)
+	onMessage(c *Context)
 }
 

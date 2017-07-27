@@ -6,11 +6,11 @@ import (
 )
 
 type Reactor struct {
-
+   pipeline *Pipeline
 }
 
 func New() *Reactor{
-
+   return &Reactor{NewPipeline()}
 }
 
 func Run(proto string,addr string){
