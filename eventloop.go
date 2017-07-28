@@ -2,20 +2,25 @@ package gonet
 
 import "sync"
 
+type event struct {
+	data interface{}
+	handler interface{}
+}
+
 type EventLoop struct {
     sync.Mutex
-	events []interface{}
+	events []event
 }
 
 
 func newEventLoop() *EventLoop{
-	return &EventLoop{events:[]interface{}{}}
+	return &EventLoop{}
 }
 
-func (el *EventLoop) put(event interface{}){
+func (el *EventLoop) put(e event){
 	el.Lock()
 	defer el.Unlock()
-	el.events=append(el.events,event)
+	el.events=append(el.events,e)
 }
 
 
@@ -24,7 +29,7 @@ func (el *EventLoop) run(){
 		el.Lock()
 		e:=el.events[0]
 		el.events=el.events[1:]
-		if f,ok:= e.(func (*Context));ok{
+		if f,ok:= e.handler.(func (*Context));ok{
 			f()
 		}
 		el.Unlock()

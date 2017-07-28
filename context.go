@@ -1,19 +1,15 @@
 package gonet
 
-import "bytes"
 
 type Context struct {
-	buffer *bytes.Buffer
+    data interface{}
 }
 
 func newContext() *Context{
-	return &Context{ bytes.NewBuffer( make([]byte,1024))}
+	return &Context{}
 }
 
 func (c *Context) Write(data interface{}){
-
+    c.data=data
 }
 
-func (c *Context) Read(data interface{}){
-
-}

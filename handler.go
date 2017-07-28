@@ -1,9 +1,8 @@
 package gonet
 
 type Handler interface {
-	onConnected(c *Context) error
-	onError(c *Context)
-	onClosed(c *Context)
-	onMessage(c *Context)
+	channelActive(c *Context) error
+	exceptionCaught(c *Context,err error)
+	channelRead(c *Context,data interface{}) error
 }
 
