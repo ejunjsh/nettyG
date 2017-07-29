@@ -24,3 +24,4 @@ func (p *Pipeline)AddEncoder(decoder Decoder) {
 func (p *Pipeline)AddDecoder(encoder Encoder) {
 	p.encoders=append(p.encoders,encoder)
 }
+

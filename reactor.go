@@ -26,7 +26,7 @@ func handle(conn net.Conn){
 				   break
 			   }
 		   }
-		   r.el.put(&event{d,})
+		   r.el.put(&event{d,channelRead})
 	   }
 	}
 }
