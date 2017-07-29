@@ -1,8 +1,20 @@
 package gonet
 
-type Handler interface {
+type ChannelActiveHandler interface {
 	channelActive(c *Context) error
-	exceptionCaught(c *Context,err error)
+}
+
+type ErrorCaughtHandler interface {
+	errorCaught(c *Context,err error)
+}
+
+type ChannelReadHandler interface {
 	channelRead(c *Context,data interface{}) error
+}
+
+type Handler interface {
+	ChannelActiveHandler
+	ErrorCaughtHandler
+	ChannelReadHandler
 }
 

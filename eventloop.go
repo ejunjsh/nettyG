@@ -9,7 +9,7 @@ type event struct {
 
 type EventLoop struct {
     sync.Mutex
-	events []event
+	events []*event
 }
 
 
@@ -17,7 +17,7 @@ func newEventLoop() *EventLoop{
 	return &EventLoop{}
 }
 
-func (el *EventLoop) put(e event){
+func (el *EventLoop) put(e *event){
 	el.Lock()
 	defer el.Unlock()
 	el.events=append(el.events,e)

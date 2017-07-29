@@ -1,12 +1,12 @@
 package gonet
 
 type Encoder interface {
-	onWrite(c *Context)
+	onWrite(data interface{}) interface{}
 }
 
 
 type Decoder interface {
-	onRead(c *Context)
+	onRead(data interface{}) interface{}
 }
 
 
@@ -15,10 +15,10 @@ type LineCodec struct {
 }
 
 
-func (l *LineCodec) onWrite(c *Context){
-
+func (l *LineCodec) onWrite(data interface{}) interface{} {
+	return nil
 }
 
-func (l *LineCodec) onRead(c *Context){
-
+func (l *LineCodec) onRead(data interface{}) interface{}{
+ return  nil
 }
