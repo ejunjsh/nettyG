@@ -16,5 +16,8 @@ func (c *Client) Connect(proto string,addr string){
 		return
 	}
 
-	go handle(conn)
+	r:=&Reactor{pipeline:NewPipeline()}
+	r.el.run(r.pipeline)
+
+	go handle(conn,r)
 }

@@ -17,7 +17,7 @@ func (s *Server) Run(proto string,addr string){
 		return
 	}
 
-	r:=&Reactor{NewPipeline(),newEventLoop()}
+	r:=&Reactor{pipeline:NewPipeline()}
 	r.el.run(r.pipeline)
 
 	for{

@@ -17,11 +17,11 @@ func newBufferChannel(conn net.Conn) *BufferChannel{
 
 
 func (b *BufferChannel) Read(){
-    b.buffer.Read()
+    //b.buffer.Read()
 }
 
 func (b *BufferChannel) Write(){
-	b.buffer.Write()
+	//b.buffer.Write()
 }
 
 func (b *BufferChannel) Flush(){

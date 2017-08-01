@@ -1,6 +1,9 @@
 package gonet
 
-import "sync"
+import (
+	"sync"
+	"fmt"
+)
 
 type eventType int
 
@@ -45,12 +48,13 @@ func (el *EventLoop) run(pl *Pipeline){
 				for _,h:=range pl.handlers{
 					switch e.et {
 					case channelActive:
-						h.channelActive()
+						//h.channelActive()
 					case channelRead:
-						h.channelRead()
+						//h.channelRead()
 					case errorCaught:
-						h.errorCaught()
+					//	h.errorCaught()
 					}
+					fmt.Println(h)
 				}
 				el.Unlock()
 
