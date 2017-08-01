@@ -2,41 +2,51 @@ package gonet
 
 import (
 	"sync"
-	"sync/atomic"
+	"fmt"
 )
 
 type task func()
 
+type worker struct {
+	stopC chan bool
+}
+
 type WorkerPool struct {
 	num int
 	sync.Mutex
-	taskQ []task
-	stopFlag int32
+	taskQ chan task
+	workers []*worker
 }
 
 func NewWorkerPool(workerNum int) *WorkerPool{
-	return &WorkerPool{num:workerNum,taskQ:[]task{}}
+	return &WorkerPool{num:workerNum,taskQ:make(chan task,10000),workers:make([]*worker,workerNum)}
 }
 
 func (wp *WorkerPool) Execute(t task){
-	wp.Lock()
-	defer wp.Unlock()
-	wp.taskQ=append(wp.taskQ,t)
+	wp.taskQ<-t
 }
 
 func (wp *WorkerPool) Start() *WorkerPool{
 	for i:=0;i<wp.num;i++{
-		go func() {
-			for   atomic.LoadInt32(&(wp.stopFlag)) == 0{
-					if len(wp.taskQ)>0{
-						wp.Lock()
-						t:=wp.taskQ[0]
-						wp.taskQ= wp.taskQ[1:]
-						wp.Unlock()
-						t()
+		wp.workers[i]=&worker{ make(chan bool)}
+		w:=wp.workers[i]
+		go func(i int) {
+			for {
+				    stop:=false
+					select {
+					    case f:=<-wp.taskQ:
+							f()
+					    case stop=<-w.stopC:
+						     break
+
 					}
+
+				if stop{
+					break
+				}
 			}
-		}()
+			fmt.Println("stop")
+		}(i)
 	}
 	return wp
 }
@@ -46,5 +56,7 @@ func (wp *WorkerPool) Start() *WorkerPool{
 //}
 
 func (wp *WorkerPool) Stop(){
-	atomic.StoreInt32(&wp.stopFlag,1)
+	for _,w:=range wp.workers{
+		w.stopC<- true
+	}
 }
