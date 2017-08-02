@@ -8,12 +8,12 @@ import (
 
 func workerpool() {
 	wg := new(sync.WaitGroup)
-	wp:=NewWorkerPool(4)
+	wp:=NewWorkerPool(10,100)
 	wp.Start()
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 1000000; i++ {
 		wg.Add(1)
 		wp.Execute(func() {
-			for j := 0; j < 20000; j++ {
+			for j := 0; j < 100000; j++ {
 
 			}
 			wg.Done()
@@ -26,10 +26,10 @@ func workerpool() {
 func nopool() {
 	wg := new(sync.WaitGroup)
 
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 1000000; i++ {
 		wg.Add(1)
 		go func(n int) {
-			for j := 0; j < 20000; j++ {
+			for j := 0; j < 100000; j++ {
 
 			}
 			defer wg.Done()
@@ -47,14 +47,17 @@ func gopool() {
 		go func(n int) {
 			defer wg.Done()
 			for _ = range data {
-				for j := 0; j < 20000; j++ {
+				func(){
+					for j := 0; j < 100000; j++ {
 
-				}
+					}
+				}()
+
 			}
 		}(i)
 	}
 
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 1000000; i++ {
 		data <- i
 	}
 	close(data)
@@ -81,7 +84,7 @@ func BenchmarkGopool(b *testing.B) {
 
 func TestNewWorkerPool(t *testing.T) {
 	wg := new(sync.WaitGroup)
-	wp:=NewWorkerPool(4)
+	wp:=NewWorkerPool(4,100)
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		wp.Execute(func() {

@@ -18,8 +18,8 @@ type WorkerPool struct {
 	workers []*worker
 }
 
-func NewWorkerPool(workerNum int) *WorkerPool{
-	return &WorkerPool{num:workerNum,taskQ:make(chan task,10000),workers:make([]*worker,workerNum)}
+func NewWorkerPool(workerNum int,queueCap int) *WorkerPool{
+	return &WorkerPool{num:workerNum,taskQ:make(chan task,queueCap),workers:make([]*worker,workerNum)}
 }
 
 func (wp *WorkerPool) Execute(t task){
