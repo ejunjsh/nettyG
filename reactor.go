@@ -2,34 +2,24 @@ package gonet
 
 import (
 	"net"
+	"bytes"
 )
 
-type Reactor struct {
-   pipeline *Pipeline
-   el	*EventLoop
-}
 
-
-
-func handle(conn net.Conn, r *Reactor){
-	for{
-		b:=make([]byte,1024)
-		_,err:=conn.Read(b)
-		if err!=nil{
-			for {
-				var d interface{}
-				d = b
-				for _, decoder := range r.pipeline.decoders {
-					if d = decoder.onRead(d); d != nil {
-						continue
-					} else {
-						break
-					}
-				}
-				r.el.put(&event{d,channelRead})
-			}
-		}else{
-			return
+func handle(conn net.Conn,p *Pipeline){
+	for  {
+		writeBuffer:= bytes.NewBuffer(make([]byte,0,1024*10))
+		read:=func(){
+			b:=make([]byte,1024)
+			n,error:=conn.Read(b)
+			p.head.handler.channelRead(p.head,b)
 		}
+		write:=func(data interface{}){
+			if ok,b:= data.(bytes.Buffer);ok{
+			}
+		}
+
+		read()
+		write()
 	}
 }

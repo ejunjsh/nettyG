@@ -17,15 +17,12 @@ func (s *Server) Run(proto string,addr string){
 		return
 	}
 
-	r:=&Reactor{pipeline:NewPipeline()}
-	r.el.run(r.pipeline)
-
 	for{
 		conn,err:=l.Accept()
 		if err!=nil{
 			return
 		}
 
-		go handle(conn,r)
+		go handle(conn)
 	}
 }
