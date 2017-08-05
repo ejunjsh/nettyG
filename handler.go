@@ -3,11 +3,16 @@ package gonet
 
 
 type InboundHandler interface {
-	channelActive(c *HandlerContext) error
-	channelRead(c *HandlerContext,data interface{}) error
-	errorCaught(c *HandlerContext,err error)
+	Read(c *HandlerContext) error
+	Connected(c *HandlerContext,data interface{}) error
+	Handler
+}
+
+type OutboundHandler interface {
+	Write(c *HandlerContext) error
+	Handler
 }
 
 type Handler interface {
-	InboundHandler
+	errorCaught(c *HandlerContext,err error)
 }
