@@ -20,5 +20,5 @@ func (l *LineCodec) onWrite(data interface{}) interface{} {
 }
 
 func (l *LineCodec) onRead(data interface{}) interface{}{
- return  nil
+ 	return  nil
 }

@@ -26,7 +26,7 @@ func (c *channel) runReadEventLoop(){
 			if err!=nil{
 				break
 			}
-			c.pipeline.fireNextWrite(b)
+			c.pipeline.fireNextRead(b)
 		}
 	}()
 }
