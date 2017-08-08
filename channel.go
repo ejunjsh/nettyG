@@ -18,7 +18,7 @@ func newChannel(conn net.Conn,pipeline *Pipeline) *channel{
 	return &channel{conn,pipeline,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024))}
 }
 
-func (c *channel) read(){
+func (c *channel) runReadEventLoop(){
 	go func() {
 		for{
 			b:=make([]byte,1024)
@@ -31,7 +31,7 @@ func (c *channel) read(){
 	}()
 }
 
-func (c *channel) write(){
+func (c *channel) runWriteEventLoop(){
 	go func() {
 		t:=time.Tick(time.Second)
 		for{

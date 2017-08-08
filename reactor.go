@@ -5,6 +5,8 @@ import (
 )
 
 
-func handle(conn net.Conn){
-
+func handle(conn net.Conn,p *Pipeline){
+	chl:=newChannel(conn,p)
+	chl.runReadEventLoop()
+	chl.runWriteEventLoop()
 }
