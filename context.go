@@ -1,23 +1,27 @@
 package gonet
 
-import "net"
-
 type HandlerContext struct {
 	p *Pipeline
     next *HandlerContext
 	handler Handler
 }
 
-func newHandlerContext() *HandlerContext {
-	return &HandlerContext{}
+func newHandlerContext(p *Pipeline,handler Handler) *HandlerContext {
+	return &HandlerContext{p:p,handler:handler}
 }
 
-func (h *HandlerContext) Write(data interface{}){
-
+func (h *HandlerContext) FireWrite(data interface{}){
+	hc:=h.findNextOutbound()
+	if hc!=nil{
+		hc.handler.(OutboundHandler).Write(hc,data)
+	}
 }
 
 func (h *HandlerContext) FireRead(data interface{}){
-
+    hc:=h.findNextInbound()
+	if hc!=nil{
+		hc.handler.(InboundHandler).Read(hc,data)
+	}
 }
 
 func (h *HandlerContext) isInbound() bool{

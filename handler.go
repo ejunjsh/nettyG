@@ -3,13 +3,13 @@ package gonet
 
 
 type InboundHandler interface {
-	Read(c *HandlerContext) error
-	Connected(c *HandlerContext,data interface{}) error
+	Read(c *HandlerContext,data interface{}) error
+	Connected(c *HandlerContext) error
 	Handler
 }
 
 type OutboundHandler interface {
-	Write(c *HandlerContext) error
+	Write(c *HandlerContext,data interface{}) error
 	Handler
 }
 
