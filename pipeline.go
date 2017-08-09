@@ -4,6 +4,7 @@ package gonet
 type Pipeline struct {
 	head *HandlerContext
 	tail *HandlerContext
+	chl *channel
 }
 
 func (p *Pipeline) fireNextRead(data interface{}){
@@ -74,6 +75,14 @@ func newPipeline() *Pipeline{
      p:=&Pipeline{}
 	p.tail=&HandlerContext{p,nil,&tailHandler{}}
 	p.head=&HandlerContext{p,nil,&headHandler{}}
+	return p
+}
+
+func newPipelineWithChannel(pl *Pipeline,chl *channel) *Pipeline{
+	p:=&Pipeline{}
+	p.tail=pl.tail
+	p.head=pl.head
+	p.chl=chl
 	return p
 }
 

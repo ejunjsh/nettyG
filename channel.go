@@ -15,7 +15,10 @@ type channel struct {
 }
 
 func newChannel(conn net.Conn,pipeline *Pipeline) *channel{
-	return &channel{conn,pipeline,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024))}
+	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024))}
+	p:=newPipelineWithChannel(pipeline,chl)
+	chl.pipeline=p
+	return chl
 }
 
 func (c *channel) runReadEventLoop(){

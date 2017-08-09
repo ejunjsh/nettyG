@@ -3,6 +3,7 @@ package gonet
 type HandlerContext struct {
 	p *Pipeline
     next *HandlerContext
+	prev *HandlerContext
 	handler Handler
 }
 
