@@ -6,6 +6,7 @@ import (
 	"os"
 	//"time"
 	"io/ioutil"
+	"time"
 )
 
 func main(){
@@ -30,7 +31,7 @@ func main(){
 func CheckError(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
-		os.Exit(1)
+		//os.Exit(1)
 	}
 }
 
@@ -43,13 +44,17 @@ func handleConnection(conn net.Conn) {
 		//	return
 		//}
 
-		buf, err := ioutil.ReadAll(conn)
-		if err != nil {
-			// Error Handler
-			return
+	    for{
+			conn.SetReadDeadline(time.Now().Add(time.Second*10))
+			buf, err := ioutil.ReadAll(conn)
+			if err != nil {
+				// Error Handler
+				CheckError(err)
+			}
+
+			fmt.Println(string(buf))
 		}
 
-		fmt.Println(string(buf))
 
 		//Log(conn.RemoteAddr().String(), "receive data length:", n)
 		//Log(conn.RemoteAddr().String(), "receive data:", buffer[:n])

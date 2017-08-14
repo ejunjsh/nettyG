@@ -12,10 +12,11 @@ type channel struct {
 	pipeline *Pipeline
 	writebuffer  *bytes.Buffer
 	readbuffer *bytes.Buffer
+	flushC chan bool
 }
 
 func newChannel(conn net.Conn,pipeline *Pipeline) *channel{
-	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024))}
+	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024)),make(chan bool)}
 	p:=newPipelineWithChannel(pipeline,chl)
 	chl.pipeline=p
 	return chl
@@ -39,6 +40,8 @@ func (c *channel) runWriteEventLoop(){
 		t:=time.Tick(time.Second)
 		for{
 			select {
+			case <-c.flushC:
+				io.Copy(c.conn,c.writebuffer)
 			case <-t:
 				io.Copy(c.conn,c.writebuffer)
 			}

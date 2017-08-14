@@ -16,28 +16,22 @@ func (p *Pipeline) fireNextWrite(data interface{}){
 }
 
 
-func (p *Pipeline) addInbound(inbound InboundHandler){
-	next:=p.head
-   for{
-	  if next.next==nil{
-          next=newHandlerContext(p,inbound)
-		  return
-	  } else {
-	      next=next.next
-	  }
-   }
+func (p *Pipeline) AddLast(handler Handler){
+    prev:=p.tail.prev
+	newH:=newHandlerContext(p,handler)
+	newH.prev=prev
+	newH.next=p.tail
+	prev.next=newH
+	p.tail.prev=newH
 }
 
-func (p *Pipeline) addOutbound(outbound OutboundHandler){
-	next:=p.tail
-	for{
-		if next.next==nil{
-			next=newHandlerContext(p,outbound)
-			return
-		} else {
-			next=next.next
-		}
-	}
+func (p *Pipeline) AddFirst(handler Handler){
+	next:=p.head.next
+	newH:=newHandlerContext(p,handler)
+	newH.prev=p.head
+	newH.next=next
+	p.head.next=newH
+	next.prev=newH
 }
 
 type headHandler struct {
@@ -73,8 +67,10 @@ func (t *tailHandler) Write(c *HandlerContext,data interface{}) error{
 
 func newPipeline() *Pipeline{
      p:=&Pipeline{}
-	p.tail=&HandlerContext{p,nil,&tailHandler{}}
-	p.head=&HandlerContext{p,nil,&headHandler{}}
+	p.tail=&HandlerContext{p,nil,nil,&tailHandler{}}
+	p.head=&HandlerContext{p,nil,nil,&headHandler{}}
+	p.head.next=p.tail
+	p.tail.prev=p.head
 	return p
 }
 

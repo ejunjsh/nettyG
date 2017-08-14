@@ -36,26 +36,22 @@ func (h *HandlerContext) isOutbound() bool{
 }
 
 func (h *HandlerContext) findNextInbound() *HandlerContext{
-	next:=h.next
+	next:=h
 	for{
-		if h.next==nil{
-			return nil
-		}
 		if next.isInbound(){
 			return next
 		}
+		next=next.next
 	}
 }
 
 func (h *HandlerContext) findNextOutbound() *HandlerContext{
-	next:=h.next
+	prev:=h
 	for{
-		if h.next==nil{
-			return nil
+		if prev.isOutbound(){
+			return prev
 		}
-		if next.isOutbound(){
-			return next
-		}
+		prev=prev.prev
 	}
 }
 
