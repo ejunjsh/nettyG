@@ -17,9 +17,12 @@ type channel struct {
 
 func newChannel(conn net.Conn,pipeline *Pipeline) *channel{
 	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024)),make(chan bool)}
-	p:=newPipelineWithChannel(pipeline,chl)
-	chl.pipeline=p
+	chl.pipeline=pipeline
 	return chl
+}
+
+func (c *channel) Pipeline() *Pipeline{
+	return c.pipeline
 }
 
 func (c *channel) runReadEventLoop(){
@@ -47,5 +50,9 @@ func (c *channel) runWriteEventLoop(){
 			}
 		}
 	}()
+}
+
+func (c *channel) Write(b []byte){
+     c.writebuffer.Write(b)
 }
 

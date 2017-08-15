@@ -44,12 +44,20 @@ func (h *headHandler) Read(c *HandlerContext,data interface{}) error{
 }
 
 func (h *headHandler) Connected(c *HandlerContext) error{
-
-    return nil
+	c.FireConnected()
+	return  nil
 }
 
 func (h *headHandler) errorCaught(c *HandlerContext,err error){
 
+}
+
+func (h *headHandler) Write(c *HandlerContext,data interface{}) error{
+	b,ok:=data.([]byte)
+	if ok{
+		c.p.chl.Write(b)
+	}
+	return nil
 }
 
 type tailHandler struct {
@@ -60,10 +68,7 @@ func (t *tailHandler) errorCaught(c *HandlerContext,err error){
 
 }
 
-func (t *tailHandler) Write(c *HandlerContext,data interface{}) error{
-	c.FireWrite(data)
-	return nil
-}
+
 
 func newPipeline() *Pipeline{
      p:=&Pipeline{}
@@ -74,12 +79,5 @@ func newPipeline() *Pipeline{
 	return p
 }
 
-func newPipelineWithChannel(pl *Pipeline,chl *channel) *Pipeline{
-	p:=&Pipeline{}
-	p.tail=pl.tail
-	p.head=pl.head
-	p.chl=chl
-	return p
-}
 
 

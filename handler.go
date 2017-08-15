@@ -16,3 +16,7 @@ type OutboundHandler interface {
 type Handler interface {
 	errorCaught(c *HandlerContext,err error)
 }
+
+type ChannelInitializer interface {
+	initChannel(channel *channel)
+}

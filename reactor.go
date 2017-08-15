@@ -1,12 +1,8 @@
 package gonet
 
-import (
-	"net"
-)
 
 
-func handle(conn net.Conn,p *Pipeline){
-	chl:=newChannel(conn,p)
+func handle(chl *channel){
 	chl.runReadEventLoop()
 	chl.runWriteEventLoop()
 }

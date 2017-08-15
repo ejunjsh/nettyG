@@ -25,6 +25,13 @@ func (h *HandlerContext) FireRead(data interface{}){
 	}
 }
 
+func (h *HandlerContext) FireConnected(){
+	hc:=h.findNextInbound()
+	if hc!=nil{
+		hc.handler.(InboundHandler).Connected(hc)
+	}
+}
+
 func (h *HandlerContext) isInbound() bool{
 	_,ok:= h.handler.(InboundHandler)
 	return  ok
