@@ -1,4 +1,4 @@
-package gonet
+package netgo
 
 type Encoder interface {
 	onWrite(data interface{}) interface{}

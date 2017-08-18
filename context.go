@@ -1,4 +1,4 @@
-package gonet
+package netgo
 
 type HandlerContext struct {
 	p *Pipeline
