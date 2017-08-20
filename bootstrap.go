@@ -1,16 +1,26 @@
 package netgo
 
-import "net"
+import (
+	"net"
+	"fmt"
+)
+
+type ChannelInitializer func(*channel)
 
 type Bootstrap struct{
 	initHandler ChannelInitializer
+}
+
+func NewBootstrap() *Bootstrap{
+	return &Bootstrap{}
 }
 
 func (b *Bootstrap) initChannel(conn net.Conn) *channel{
 	p:=newPipeline()
 	c:=newChannel(conn,p)
 	p.chl=c
-	b.initHandler.initChannel(c)
+	b.initHandler(c)
+	p.fireNextConnected()
 	return c
 }
 func (b *Bootstrap) Handler(handler ChannelInitializer)  *Bootstrap{
@@ -19,6 +29,7 @@ func (b *Bootstrap) Handler(handler ChannelInitializer)  *Bootstrap{
 }
 
 func (b *Bootstrap) RunServer(proto string,addr string){
+	fmt.Printf("%s listen on %s\n",proto,addr)
 	l,err:=net.Listen(proto,addr)
 	defer l.Close()
 	if err!=nil{

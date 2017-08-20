@@ -11,27 +11,30 @@ func (p *Pipeline) fireNextRead(data interface{}){
 	p.head.FireRead(data)
 }
 
-func (p *Pipeline) fireNextWrite(data interface{}){
-	p.tail.FireWrite(data)
+func (p *Pipeline) fireNextConnected(){
+	p.head.FireConnected()
 }
 
 
-func (p *Pipeline) AddLast(handler Handler){
+
+func (p *Pipeline) AddLast(handler Handler) *Pipeline{
     prev:=p.tail.prev
 	newH:=newHandlerContext(p,handler)
 	newH.prev=prev
 	newH.next=p.tail
 	prev.next=newH
 	p.tail.prev=newH
+	return p
 }
 
-func (p *Pipeline) AddFirst(handler Handler){
+func (p *Pipeline) AddFirst(handler Handler) *Pipeline{
 	next:=p.head.next
 	newH:=newHandlerContext(p,handler)
 	newH.prev=p.head
 	newH.next=next
 	p.head.next=newH
 	next.prev=newH
+	return p
 }
 
 type headHandler struct {
@@ -48,7 +51,7 @@ func (h *headHandler) Connected(c *HandlerContext) error{
 	return  nil
 }
 
-func (h *headHandler) errorCaught(c *HandlerContext,err error){
+func (h *headHandler) ErrorCaught(c *HandlerContext,err error){
 
 }
 
@@ -64,7 +67,7 @@ type tailHandler struct {
 
 }
 
-func (t *tailHandler) errorCaught(c *HandlerContext,err error){
+func (t *tailHandler) ErrorCaught(c *HandlerContext,err error){
 
 }
 
