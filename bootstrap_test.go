@@ -9,6 +9,7 @@ func TestBootstrap_RunServer(t *testing.T) {
 	NewBootstrap().Handler(func(channel *channel) {
         channel.Pipeline().AddLast(InboundConnectedFuc(func(context *HandlerContext) error {
 			context.FireWrite("hello netgo")
+			fmt.Println("channel connected")
 			return nil
 		})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
 			if s,ok:=data.(string);ok{

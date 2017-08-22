@@ -47,20 +47,23 @@ func (h *HandlerContext) isOutbound() bool{
 func (h *HandlerContext) findNextInbound() *HandlerContext{
 	next:=h
 	for{
+		next=next.next
+
 		if next.isInbound(){
 			return next
 		}
-		next=next.next
 	}
 }
 
 func (h *HandlerContext) findNextOutbound() *HandlerContext{
 	prev:=h
 	for{
+
+		prev=prev.prev
+
 		if prev.isOutbound(){
 			return prev
 		}
-		prev=prev.prev
 	}
 }
 
