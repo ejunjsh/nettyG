@@ -1,5 +1,6 @@
 package netgo
 
+import "fmt"
 
 type Pipeline struct {
 	head *HandlerContext
@@ -59,6 +60,7 @@ func (h *headHandler) Write(c *HandlerContext,data interface{}) error{
 	b,ok:=data.([]byte)
 	if ok{
 		c.p.chl.Write(b)
+		fmt.Println("write 2")
 	}
 	return nil
 }

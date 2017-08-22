@@ -47,6 +47,7 @@ func (c *channel) runWriteEventLoop(){
 				io.Copy(c.conn,c.writebuffer)
 			case <-t:
 				io.Copy(c.conn,c.writebuffer)
+				t=time.Tick(time.Second)
 			}
 		}
 	}()

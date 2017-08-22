@@ -34,6 +34,11 @@ func main() {
 
 	go sender(conn)
 
+	b :=make([]byte,1024)
+	conn.Read(b)
+
+	fmt.Println(string(b))
+
 	for {
 		time.Sleep(1 * 1e9)
 	}
