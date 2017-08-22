@@ -1,5 +1,7 @@
 package netgo
 
+import "io/ioutil"
+
 type HandlerContext struct {
 	p *Pipeline
     next *HandlerContext
@@ -62,4 +64,16 @@ func (h *HandlerContext) findNextOutbound() *HandlerContext{
 	}
 }
 
+
+func (h *HandlerContext) WriteToReadBuffer(b []byte){
+	h.p.chl.readbuffer.Write(b)
+}
+
+func (h *HandlerContext) ResetReadBuffer(){
+	h.p.chl.readbuffer.Reset()
+}
+
+func (h *HandlerContext) ReadAllReadBuffer() ([]byte,error){
+	return ioutil.ReadAll(h.p.chl.readbuffer)
+}
 

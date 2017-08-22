@@ -2,10 +2,10 @@ package netgo
 
 
 type LineCodec struct {
-	delimiter string
+	delimiter []byte
 }
 
-func NewLineCodec(delimiter string) *LineCodec {
+func NewLineCodec(delimiter []byte) *LineCodec {
 	return &LineCodec{delimiter}
 }
 

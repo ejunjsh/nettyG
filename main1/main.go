@@ -15,7 +15,7 @@ func sender(conn net.Conn) {
 }
 
 func main() {
-	server := "127.0.0.1:9988"
+	server := "127.0.0.1:8989"
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", server)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
