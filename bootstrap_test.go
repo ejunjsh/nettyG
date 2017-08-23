@@ -18,8 +18,8 @@ func TestBootstrap_RunServer(t *testing.T) {
 			fmt.Println("channel connected")
 			return nil
 		})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
-			if s,ok:=data.(string);ok{
-				fmt.Printf("recieve %s",s)
+			if b,ok:=data.([]byte);ok{
+				fmt.Printf("recieve %s",string(b))
 			}
 			return nil
 		}))
