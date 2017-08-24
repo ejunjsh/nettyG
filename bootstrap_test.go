@@ -14,6 +14,7 @@ func TestBootstrap_RunServer(t *testing.T) {
 		})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
 			if s,ok:=data.(string);ok{
 				fmt.Printf("recieve %s",s)
+				context.Write("Acknowledge")
 			}
 			return nil
 		}))

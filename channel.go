@@ -31,11 +31,11 @@ func (c *channel) runReadEventLoop(){
 	go func() {
 		for{
 			b:=make([]byte,1024)
-			_,err:=c.conn.Read(b)
+			n,err:=c.conn.Read(b)
 			if err!=nil{
 				break
 			}
-			c.pipeline.fireNextChannelRead(b)
+			c.pipeline.fireNextChannelRead(b[:n])
 		}
 	}()
 }
