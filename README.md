@@ -1,7 +1,7 @@
-# netgo
+# nettyG
 [![Build Status](https://travis-ci.org/ejunjsh/nettyG.svg?branch=master)](https://travis-ci.org/ejunjsh/nettyG)
 
-a simple netty-like network frame.
+a simple netty-like network framework.
 ````go
 func TestBootstrap_RunServer(t *testing.T) {
 	NewBootstrap().Handler(func(channel *channel) {
