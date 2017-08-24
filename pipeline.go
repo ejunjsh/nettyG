@@ -1,19 +1,17 @@
 package netgo
 
-import "fmt"
-
 type Pipeline struct {
 	head *HandlerContext
 	tail *HandlerContext
 	chl *channel
 }
 
-func (p *Pipeline) fireNextRead(data interface{}){
-	p.head.FireRead(data)
+func (p *Pipeline) fireNextChannelRead(data interface{}){
+	p.head.FireChannelRead(data)
 }
 
-func (p *Pipeline) fireNextConnected(){
-	p.head.FireConnected()
+func (p *Pipeline) fireNextChannelActive(){
+	p.head.FireChannelActive()
 }
 
 
@@ -42,13 +40,13 @@ type headHandler struct {
 
 }
 
-func (h *headHandler) Read(c *HandlerContext,data interface{}) error{
-	c.FireRead(data)
+func (h *headHandler) ChannelRead(c *HandlerContext,data interface{}) error{
+	c.FireChannelRead(data)
 	return nil
 }
 
-func (h *headHandler) Connected(c *HandlerContext) error{
-	c.FireConnected()
+func (h *headHandler) ChannelActive(c *HandlerContext) error{
+	c.FireChannelActive()
 	return  nil
 }
 
@@ -60,9 +58,16 @@ func (h *headHandler) Write(c *HandlerContext,data interface{}) error{
 	b,ok:=data.([]byte)
 	if ok{
 		c.p.chl.Write(b)
-		fmt.Println("write 2")
 	}
 	return nil
+}
+
+func (h *headHandler) Close(c *HandlerContext) error{
+	return c.p.chl.Close()
+}
+
+func (h *headHandler) Flush(c *HandlerContext) error{
+	return c.p.chl.Flush()
 }
 
 type tailHandler struct {

@@ -20,7 +20,7 @@ func (b *Bootstrap) initChannel(conn net.Conn) *channel{
 	c:=newChannel(conn,p)
 	p.chl=c
 	b.initHandler(c)
-	p.fireNextConnected()
+	p.fireNextChannelActive()
 	return c
 }
 func (b *Bootstrap) Handler(handler ChannelInitializer)  *Bootstrap{

@@ -13,24 +13,43 @@ func newHandlerContext(p *Pipeline,handler Handler) *HandlerContext {
 	return &HandlerContext{p:p,handler:handler}
 }
 
-func (h *HandlerContext) FireWrite(data interface{}){
+func (h *HandlerContext) Write(data interface{}){
 	hc:=h.findNextOutbound()
 	if hc!=nil{
 		hc.handler.(OutboundHandler).Write(hc,data)
 	}
 }
 
-func (h *HandlerContext) FireRead(data interface{}){
-    hc:=h.findNextInbound()
+func (h *HandlerContext) Flush(){
+	hc:=h.findNextOutbound()
 	if hc!=nil{
-		hc.handler.(InboundHandler).Read(hc,data)
+		hc.handler.(OutboundHandler).Flush(hc)
 	}
 }
 
-func (h *HandlerContext) FireConnected(){
+func (h *HandlerContext) WriteAndFlush(data interface{}){
+	h.Write(data)
+	h.Flush()
+}
+
+func (h *HandlerContext) Close(){
+	hc:=h.findNextOutbound()
+	if hc!=nil{
+		hc.handler.(OutboundHandler).Close(hc)
+	}
+}
+
+func (h *HandlerContext) FireChannelRead(data interface{}){
+    hc:=h.findNextInbound()
+	if hc!=nil{
+		hc.handler.(InboundHandler).ChannelRead(hc,data)
+	}
+}
+
+func (h *HandlerContext) FireChannelActive(){
 	hc:=h.findNextInbound()
 	if hc!=nil{
-		hc.handler.(InboundHandler).Connected(hc)
+		hc.handler.(InboundHandler).ChannelActive(hc)
 	}
 }
 

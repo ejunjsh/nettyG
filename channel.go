@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"time"
 	"io"
+	"sync"
 )
 
 type channel struct {
@@ -13,10 +14,11 @@ type channel struct {
 	writebuffer  *bytes.Buffer
 	readbuffer *bytes.Buffer
 	flushC chan bool
+	writeLocker sync.Mutex
 }
 
 func newChannel(conn net.Conn,pipeline *Pipeline) *channel{
-	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024)),make(chan bool)}
+	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),bytes.NewBuffer(make([]byte,0,1024)),make(chan bool),sync.Mutex{}}
 	chl.pipeline=pipeline
 	return chl
 }
@@ -33,27 +35,42 @@ func (c *channel) runReadEventLoop(){
 			if err!=nil{
 				break
 			}
-			c.pipeline.fireNextRead(b)
+			c.pipeline.fireNextChannelRead(b)
 		}
 	}()
 }
 
 func (c *channel) runWriteEventLoop(){
 	go func() {
-		t:=time.Tick(time.Second)
+		t:=time.Tick(time.Millisecond)
 		for{
 			select {
 			case <-c.flushC:
+				c.writeLocker.Lock()
 				io.Copy(c.conn,c.writebuffer)
+				c.writeLocker.Unlock()
 			case <-t:
+				c.writeLocker.Lock()
 				io.Copy(c.conn,c.writebuffer)
-				t=time.Tick(time.Second)
+				t=time.Tick(time.Millisecond)
+				c.writeLocker.Unlock()
 			}
 		}
 	}()
 }
 
 func (c *channel) Write(b []byte){
-     c.writebuffer.Write(b)
+	c.writeLocker.Lock()
+	defer c.writeLocker.Unlock()
+	c.writebuffer.Write(b)
 }
 
+
+func (c *channel) Close() error{
+	return c.conn.Close()
+}
+
+func (c *channel) Flush() error{
+	c.flushC<-true
+	return nil
+}
