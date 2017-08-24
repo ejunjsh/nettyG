@@ -1,4 +1,4 @@
-package netgo
+package nettyG
 
 import "io/ioutil"
 
