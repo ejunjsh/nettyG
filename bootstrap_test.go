@@ -7,18 +7,13 @@ import (
 
 func TestBootstrap_RunServer(t *testing.T) {
 	NewBootstrap().Handler(func(channel *channel) {
-        channel.Pipeline().AddLast(OutboundWriteFuc(func(context *HandlerContext, data interface{}) error {
-			if s,ok:=data.(string);ok{
-				context.Write([]byte(s))
-			}
-			return nil
-		})).AddLast(InboundActiveFuc(func(context *HandlerContext) error {
+        channel.Pipeline().AddLast(NewStringCodec()).AddLast(InboundActiveFuc(func(context *HandlerContext) error {
 			context.Write("hello netgo")
 			fmt.Println("channel connected")
 			return nil
 		})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
-			if b,ok:=data.([]byte);ok{
-				fmt.Printf("recieve %s",string(b))
+			if s,ok:=data.(string);ok{
+				fmt.Printf("recieve %s",s)
 			}
 			return nil
 		}))
