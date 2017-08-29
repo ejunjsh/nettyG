@@ -18,3 +18,15 @@ func TestBootstrap_RunServer(t *testing.T) {
 	}).RunServer("tcp",":8989")
 }
 ````
+
+benchmark
+nettyG vs go standard lib
+````bash
+$ go test -bench .
+tcp listen on :8981
+BenchmarkGostd-8           10000            123746 ns/op
+BenchmarkNettyG-8          10000            134753 ns/op
+PASS
+ok      github.com/ejunjsh/nettyG       2.623s
+
+````
