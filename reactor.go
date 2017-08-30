@@ -2,7 +2,7 @@ package nettyG
 
 
 
-func handle(chl *channel){
+func handle(chl *Channel){
 	chl.runReadEventLoop()
 	//chl.runWriteEventLoop()
 }

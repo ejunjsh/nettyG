@@ -3,7 +3,7 @@ package nettyG
 type Pipeline struct {
 	head *HandlerContext
 	tail *HandlerContext
-	chl *channel
+	chl *Channel
 }
 
 func (p *Pipeline) fireNextChannelRead(data interface{}){
@@ -74,8 +74,31 @@ type tailHandler struct {
 
 }
 
+func (t *tailHandler) ChannelRead(c *HandlerContext,data interface{}) error{
+	return nil
+}
+
+func (t *tailHandler) ChannelActive(c *HandlerContext) error{
+	return nil
+}
+
 func (t *tailHandler) ErrorCaught(c *HandlerContext,err error){
 
+}
+
+func (t *tailHandler) Write(c *HandlerContext,data interface{}) error{
+	c.Write(data)
+	return nil
+}
+
+func (t *tailHandler) Close(c *HandlerContext) error{
+	c.Close()
+	return nil
+}
+
+func (t *tailHandler) Flush(c *HandlerContext) error{
+	c.Flush()
+	return nil
 }
 
 

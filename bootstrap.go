@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-type ChannelInitializer func(*channel)
+type ChannelInitializer func(*Channel)
 
 type Bootstrap struct{
 	initHandler ChannelInitializer
@@ -15,7 +15,7 @@ func NewBootstrap() *Bootstrap{
 	return &Bootstrap{}
 }
 
-func (b *Bootstrap) initChannel(conn net.Conn) *channel{
+func (b *Bootstrap) initChannel(conn net.Conn) *Channel {
 	p:=newPipeline()
 	c:=newChannel(conn,p)
 	p.chl=c

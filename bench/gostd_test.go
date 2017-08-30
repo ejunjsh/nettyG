@@ -1,4 +1,4 @@
-package nettyG
+package bench
 
 import (
 	"net"

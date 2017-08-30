@@ -22,6 +22,7 @@ func TestBootstrap_RunServer(t *testing.T) {
 benchmark
 nettyG vs go standard lib
 ````bash
+$ cd bench
 $ go test -bench .
 tcp listen on :8981
 BenchmarkGostd-8           10000            123746 ns/op

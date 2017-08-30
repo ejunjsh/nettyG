@@ -9,7 +9,7 @@ import (
 	//"fmt"
 )
 
-type channel struct {
+type Channel struct {
 	conn net.Conn
 	pipeline *Pipeline
 	writebuffer  *bytes.Buffer
@@ -19,18 +19,18 @@ type channel struct {
 	writeLocker sync.Mutex
 }
 
-func newChannel(conn net.Conn,pipeline *Pipeline) *channel{
-	chl:= &channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),
+func newChannel(conn net.Conn,pipeline *Pipeline) *Channel {
+	chl:= &Channel{conn,nil,bytes.NewBuffer(make([]byte,0,1024)),
 		bytes.NewBuffer(make([]byte,0,1024)),make(chan bool,1),make(chan struct{}),sync.Mutex{}}
 	chl.pipeline=pipeline
 	return chl
 }
 
-func (c *channel) Pipeline() *Pipeline{
+func (c *Channel) Pipeline() *Pipeline{
 	return c.pipeline
 }
 
-func (c *channel) runReadEventLoop(){
+func (c *Channel) runReadEventLoop(){
 	//go func() {
 		for{
 			b:=make([]byte,1024)
@@ -44,7 +44,7 @@ func (c *channel) runReadEventLoop(){
 	//}()
 }
 
-//func (c *channel) runWriteEventLoop(){
+//func (c *Channel) runWriteEventLoop(){
 //	go func() {
 //		t:=time.Tick(time.Millisecond)
 //		for{
@@ -69,21 +69,21 @@ func (c *channel) runReadEventLoop(){
 //	}()
 //}
 
-//func (c *channel) Write(b []byte){
+//func (c *Channel) Write(b []byte){
 //	c.writeLocker.Lock()
 //	defer c.writeLocker.Unlock()
 //	c.writebuffer.Write(b)
 //}
 
-func (c *channel) Write(b []byte){
+func (c *Channel) Write(b []byte){
 	c.conn.Write(b)
 }
 
-func (c *channel) Close() error{
+func (c *Channel) Close() error{
 	return c.conn.Close()
 }
 
-func (c *channel) Flush() error{
+func (c *Channel) Flush() error{
 	//c.flushC<-true
 	return nil
 }

@@ -1,20 +1,21 @@
-package nettyG
+package bench
 
 import (
 	"testing"
 	"fmt"
 	"os"
 	"net"
+	"github.com/ejunjsh/nettyG"
 )
 
 
 func init(){
 	go func() {
-		NewBootstrap().Handler(func(channel *channel) {
-			channel.Pipeline().AddLast(NewStringCodec()).AddLast(InboundActiveFuc(func(context *HandlerContext) error {
+		nettyG.NewBootstrap().Handler(func(channel *nettyG.Channel) {
+			channel.Pipeline().AddLast(nettyG.NewStringCodec()).AddLast(nettyG.InboundActiveFuc(func(context *nettyG.HandlerContext) error {
 				context.WriteAndFlush("hello netgo")
 				return nil
-			})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
+			})).AddLast(nettyG.InboundReadFuc(func(context *nettyG.HandlerContext, data interface{}) error {
 				if _,ok:=data.(string);ok{
 					context.WriteAndFlush("Acknowledge")
 					context.Close()
