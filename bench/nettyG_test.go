@@ -12,7 +12,9 @@ import (
 func init(){
 	go func() {
 		nettyG.NewBootstrap().Handler(func(channel *nettyG.Channel) {
-			channel.Pipeline().AddLast(nettyG.NewStringCodec()).AddLast(nettyG.InboundActiveFuc(func(context *nettyG.HandlerContext) error {
+			channel.Pipeline().
+				AddLast(nettyG.NewStringCodec()).
+				AddLast(nettyG.InboundActiveFuc(func(context *nettyG.HandlerContext) error {
 				context.WriteAndFlush("hello netgo")
 				return nil
 			})).AddLast(nettyG.InboundReadFuc(func(context *nettyG.HandlerContext, data interface{}) error {
