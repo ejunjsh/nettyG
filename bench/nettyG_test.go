@@ -14,10 +14,10 @@ func init(){
 		nettyG.NewBootstrap().Handler(func(channel *nettyG.Channel) {
 			channel.Pipeline().
 				AddLast(nettyG.NewStringCodec()).
-				AddLast(nettyG.InboundActiveFuc(func(context *nettyG.HandlerContext) error {
+				AddLast(nettyG.ChannelActiveFunc(func(context *nettyG.HandlerContext) error {
 				context.WriteAndFlush("hello netgo")
 				return nil
-			})).AddLast(nettyG.InboundReadFuc(func(context *nettyG.HandlerContext, data interface{}) error {
+			})).AddLast(nettyG.ChannelReadFunc(func(context *nettyG.HandlerContext, data interface{}) error {
 				if _,ok:=data.(string);ok{
 					context.WriteAndFlush("Acknowledge")
 					context.Close()

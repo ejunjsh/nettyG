@@ -14,10 +14,10 @@ func TestNewLineCodec(t *testing.T) {
 			channel.Pipeline().
 				AddLast(NewLineCodec("\n")).
 				AddLast(NewStringCodec()).
-				AddLast(InboundActiveFuc(func(context *HandlerContext) error {
+				AddLast(ChannelActiveFunc(func(context *HandlerContext) error {
 				context.WriteAndFlush("hello netgo")
 				return nil
-			})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
+			})).AddLast(ChannelReadFunc(func(context *HandlerContext, data interface{}) error {
 				if d,ok:=data.(string);ok{
 					context.Write(d)
 				}

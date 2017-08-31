@@ -45,11 +45,11 @@ func (in *inbound) ErrorCaught(c *HandlerContext,err error){
 
 }
 
-func InboundReadFuc(read func (*HandlerContext, interface{}) error) Handler{
+func ChannelReadFunc(read func (*HandlerContext, interface{}) error) Handler{
 	return &inbound{read:read}
 }
 
-func InboundActiveFuc(active func (*HandlerContext) error) Handler{
+func ChannelActiveFunc(active func (*HandlerContext) error) Handler{
 	return &inbound{active:active}
 }
 
@@ -87,14 +87,14 @@ func (out *outbound) ErrorCaught(c *HandlerContext,err error){
 
 }
 
-func OutboundWriteFuc(write func (*HandlerContext,interface{}) error) Handler{
+func WriteFunc(write func (*HandlerContext,interface{}) error) Handler{
 	return &outbound{write:write}
 }
 
-func OutboundCloseFuc(close func (*HandlerContext) error) Handler{
+func CloseFunc(close func (*HandlerContext) error) Handler{
 	return &outbound{close:close}
 }
 
-func OutboundFlushFuc(flush func (*HandlerContext) error) Handler{
+func FlushFunc(flush func (*HandlerContext) error) Handler{
 	return &outbound{flush:flush}
 }
