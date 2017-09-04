@@ -34,12 +34,12 @@ func (c *Channel) runReadEventLoop(){
 	//go func() {
 		for{
 			b:=make([]byte,1024)
-			_,err:=c.conn.Read(b)
+			n,err:=c.conn.Read(b)
 			if err!=nil{
 				//c.closeC<- struct{}{}
 				return
 			}
-			c.readbuffer.Write(b)
+			c.readbuffer.Write(b[:n])
 			c.pipeline.fireNextChannelRead(c.readbuffer)
 		}
 	//}()

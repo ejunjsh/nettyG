@@ -12,7 +12,7 @@ func TestNewLineCodec(t *testing.T) {
 	go func() {
 		NewBootstrap().Handler(func(channel *Channel) {
 			channel.Pipeline().
-				AddLast(NewLineCodec("\n")).
+				AddLast(NewLineCodec("\r\n\r\n")).
 				AddLast(NewStringCodec()).
 				AddLast(ChannelActiveFunc(func(context *HandlerContext) error {
 				context.WriteAndFlush("hello netgo")
@@ -25,7 +25,7 @@ func TestNewLineCodec(t *testing.T) {
 			}))
 		}).RunServer("tcp",":8981")
 	}()
-
+    time.Sleep(2*time.Second)
 	conn, err := net.Dial("tcp", ":8981")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())
@@ -35,7 +35,7 @@ func TestNewLineCodec(t *testing.T) {
 
 	b :=make([]byte,1024)
 	n,_:=conn.Read(b)
-	conn.Write([]byte("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello\n world\n"))
+	conn.Write([]byte("hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello\r\n\r\nworld\r\n\r\n"))
 	n,_=conn.Read(b)
 	fmt.Print(string(b[0:n]))
 	n,_=conn.Read(b)
