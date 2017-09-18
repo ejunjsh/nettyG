@@ -3,20 +3,20 @@
 
 a simple netty-like network framework.
 ````go
-func TestBootstrap_RunServer(t *testing.T) {
-	NewBootstrap().Handler(func(channel *channel) {
-        channel.Pipeline().AddLast(NewStringCodec()).AddLast(InboundActiveFuc(func(context *HandlerContext) error {
-			context.Write("hello netgo")
-			fmt.Println("channel connected")
-			return nil
-		})).AddLast(InboundReadFuc(func(context *HandlerContext, data interface{}) error {
-			if s,ok:=data.(string);ok{
-				fmt.Printf("recieve %s",s)
-			}
-			return nil
-		}))
-	}).RunServer("tcp",":8989")
-}
+NewBootstrap().Handler(func(channel *Channel) {
+			channel.Pipeline().
+				AddLast(NewLineCodec("\r\n\r\n")).
+				AddLast(NewStringCodec()).
+				AddLast(ChannelActiveFunc(func(context *HandlerContext) error {
+				context.WriteAndFlush("hello netgo")
+				return nil
+			})).AddLast(ChannelReadFunc(func(context *HandlerContext, data interface{}) error {
+				if d,ok:=data.(string);ok{
+					context.Write(d)
+				}
+				return nil
+			}))
+		}).RunServer("tcp",":8981")
 ````
 
 benchmark
