@@ -8,7 +8,7 @@ NewBootstrap().Handler(func(channel *Channel) {
 				AddLast(NewLineCodec("\r\n\r\n")).
 				AddLast(NewStringCodec()).
 				AddLast(ChannelActiveFunc(func(context *HandlerContext) error {
-				context.WriteAndFlush("hello netgo")
+				context.WriteAndFlush("hello nettyG")
 				return nil
 			})).AddLast(ChannelReadFunc(func(context *HandlerContext, data interface{}) error {
 				if d,ok:=data.(string);ok{
