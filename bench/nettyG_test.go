@@ -15,7 +15,7 @@ func init(){
 			channel.Pipeline().
 				AddLast(nettyG.NewStringCodec()).
 				AddLast(nettyG.ChannelActiveFunc(func(context *nettyG.HandlerContext) error {
-				context.WriteAndFlush("hello netgo")
+				context.WriteAndFlush("hello nettyG")
 				return nil
 			})).AddLast(nettyG.ChannelReadFunc(func(context *nettyG.HandlerContext, data interface{}) error {
 				if _,ok:=data.(string);ok{
